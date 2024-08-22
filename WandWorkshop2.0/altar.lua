@@ -40,7 +40,7 @@ local altars = {
     property = "fire_rate_wait",
     var_field = "value_int",
     material = "spark_yellow",
-    additive = false
+    operator = "reductive"
   },
   {
     tag = "Reload_Altar",
@@ -48,7 +48,7 @@ local altars = {
     property = "reload_time",
     var_field = "value_int",
     material = "spark_red",
-    additive = false
+    operator = "reductive"
   },
   {
     tag = "Mana_Altar",
@@ -56,7 +56,7 @@ local altars = {
     property = "mana_max",
     var_field = "value_int",
     material = "spark_blue",
-    additive = true
+    operator = "additive"
   },
   {
     tag = "Recharge_Altar",
@@ -64,7 +64,7 @@ local altars = {
     property = "mana_charge_speed",
     var_field = "value_int",
     material = "spark_teal",
-    additive = true
+    operator = "additive"
   },
   {
     tag = "Shuffle_Altar",
@@ -72,7 +72,7 @@ local altars = {
     property = "shuffle_deck_when_empty",
     var_field = "value_bool",
     material = "spark_green",
-    additive = false
+    operator = "reductive"
   },
   {
     tag = "Simulcast_Altar",
@@ -80,7 +80,7 @@ local altars = {
     property = "actions_per_round",
     var_field = "value_int",
     material = "spark_player",
-    additive = true
+    operator = "additive"
   },
   {
     tag = "Spread_Altar",
@@ -88,7 +88,7 @@ local altars = {
     property = "spread_degrees",
     var_field = "value_int",
     material = "spark_yellow",
-    additive = false
+    operator = "reductive"
   },
   {
     tag = "Capacity_Altar",
@@ -96,7 +96,7 @@ local altars = {
     property = "deck_capacity",
     var_field = "value_int",
     material = "spark_white",
-    additive = true
+    operator = "additive"
   }
 }
 
@@ -248,7 +248,6 @@ function merge_wands(altar_id, target_wand)
   local pos_x, pos_y = EntityGetTransform(altar_id)
   for i=1,#altars,1 do
     local altar = altars[i]
-    local isAdditive = altar.additive
     local sub_altar_id = EntityGetClosestWithTag(pos_x, pos_y, altar.tag)
     local wand_id = get_wand(sub_altar_id)
     if wand_id ~= 0 then
@@ -269,19 +268,21 @@ function merge_wands(altar_id, target_wand)
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((isAdditive and old > val) or (not isAdditive and old < val)) then
+            if ratio > 1 and ((altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
-              ratio = 1
               val = old -- don't replace the value, it's worse than the old one!
+            end
+            if ratio > 1 then
+              ratio = 1
             end
           	if type(ratio) == "number" then
           	  val = ratio * val + (1 - ratio) * old
           	end
-            if type(flat) == "number" and flat > 0 then
-              if isAdditive then
+            if type(flat) == "number" and math.abs(flat) > 0 then
+              if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
                 val = val + flat
-              else
+              elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
                 val = val - flat
               end
             end
@@ -296,19 +297,21 @@ function merge_wands(altar_id, target_wand)
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((isAdditive and old > val) or (not isAdditive and old < val)) then
+            if ratio > 1 and ((altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
-              ratio = 1
               val = old -- don't replace the value, it's worse than the old one!
+            end
+            if ratio > 1 then
+              ratio = 1
             end
           	if type(ratio) == "number" then
           	  val = ratio * val + (1 - ratio) * old
           	end
-            if type(flat) == "number" and flat > 0 then
-              if isAdditive then
+            if type(flat) == "number" and math.abs(flat) > 0 then
+              if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
                 val = val + flat
-              else
+              elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
                 val = val - flat
               end
             end
