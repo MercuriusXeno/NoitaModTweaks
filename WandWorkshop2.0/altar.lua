@@ -154,8 +154,6 @@ function get_altar(wand_id)
   return nil
 end
 
-
-
 function kill_wand(wand_id, altar_id, material)
   local wand_x, wand_y = EntityGetTransform(wand_id)
   if material ~= nil then
@@ -250,6 +248,7 @@ function merge_wands(altar_id, target_wand)
   local pos_x, pos_y = EntityGetTransform(altar_id)
   for i=1,#altars,1 do
     local altar = altars[i]
+    local isAdditive = altar.additive
     local sub_altar_id = EntityGetClosestWithTag(pos_x, pos_y, altar.tag)
     local wand_id = get_wand(sub_altar_id)
     if wand_id ~= 0 then
@@ -265,13 +264,12 @@ function merge_wands(altar_id, target_wand)
         if altar.object == nil then
           local old = ComponentGetValue2(trg_component_id, altar.property)
           ComponentSetValue2(var_component_id, altar.var_field, old)
-
           local val = ComponentGetValue2(src_component_id, altar.property)
           local flat = 0
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((isAdditive and old > val) or (~isAdditive and old < val)) then
+            if ratio > 1 and ((isAdditive and old > val) or (not isAdditive and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
               ratio = 1
@@ -298,7 +296,7 @@ function merge_wands(altar_id, target_wand)
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((isAdditive and old > val) or (~isAdditive and old < val)) then
+            if ratio > 1 and ((isAdditive and old > val) or (not isAdditive and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
               ratio = 1
