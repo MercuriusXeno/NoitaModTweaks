@@ -39,56 +39,64 @@ local altars = {
     object = "gunaction_config",
     property = "fire_rate_wait",
     var_field = "value_int",
-    material = "spark_yellow"
+    material = "spark_yellow",
+    additive = false
   },
   {
     tag = "Reload_Altar",
     object = "gun_config",
     property = "reload_time",
     var_field = "value_int",
-    material = "spark_red"
+    material = "spark_red",
+    additive = false
   },
   {
     tag = "Mana_Altar",
     object = nil,
     property = "mana_max",
     var_field = "value_int",
-    material = "spark_blue"
+    material = "spark_blue",
+    additive = true
   },
   {
     tag = "Recharge_Altar",
     object = nil,
     property = "mana_charge_speed",
     var_field = "value_int",
-    material = "spark_teal"
+    material = "spark_teal",
+    additive = true
   },
   {
     tag = "Shuffle_Altar",
     object = "gun_config",
     property = "shuffle_deck_when_empty",
     var_field = "value_bool",
-    material = "spark_green"
+    material = "spark_green",
+    additive = false
   },
   {
     tag = "Simulcast_Altar",
     object = "gun_config",
     property = "actions_per_round",
     var_field = "value_int",
-    material = "spark_player"
+    material = "spark_player",
+    additive = true
   },
   {
     tag = "Spread_Altar",
     object = "gunaction_config",
     property = "spread_degrees",
     var_field = "value_int",
-    material = "spark_yellow"
+    material = "spark_yellow",
+    additive = false
   },
   {
     tag = "Capacity_Altar",
     object = "gun_config",
     property = "deck_capacity",
     var_field = "value_int",
-    material = "spark_white"
+    material = "spark_white",
+    additive = true
   }
 }
 
@@ -263,21 +271,21 @@ function merge_wands(altar_id, target_wand)
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if (ratio > 1 and old > val) then
+            if ratio > 1 and ((isAdditive and old > val) or (~isAdditive and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
               ratio = 1
               val = old -- don't replace the value, it's worse than the old one!
-              if (val < 1) then
-                print("wtf is it doing making a malus")
-              end
-              print("Wand worse than current, lol")
             end
           	if type(ratio) == "number" then
-          	  val = ratio*val + (1-ratio)*old
+          	  val = ratio * val + (1 - ratio) * old
           	end
             if type(flat) == "number" and flat > 0 then
-              val = val + flat
+              if isAdditive then
+                val = val + flat
+              else
+                val = val - flat
+              end
             end
           end
           ComponentSetValue2(trg_component_id, altar.property, val)
@@ -290,21 +298,21 @@ function merge_wands(altar_id, target_wand)
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
             -- if ratio is > 100% and the target has better stats than the sacrifice
-            if (ratio > 1 and old > val) then
+            if ratio > 1 and ((isAdditive and old > val) or (~isAdditive and old < val)) then
               -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
               ratio = 1
               val = old -- don't replace the value, it's worse than the old one!
-              if (val < 1) then
-                print("wtf is it doing making a malus")
-              end
-              print("Wand worse than current, lol")
             end
           	if type(ratio) == "number" then
-          	  val = ratio*val + (1-ratio)*old
+          	  val = ratio * val + (1 - ratio) * old
           	end
             if type(flat) == "number" and flat > 0 then
-              val = val + flat
+              if isAdditive then
+                val = val + flat
+              else
+                val = val - flat
+              end
             end
           end
           ComponentObjectSetValue2(trg_component_id, altar.object, altar.property, val)
