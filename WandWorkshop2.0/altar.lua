@@ -279,7 +279,8 @@ function merge_wands(altar_id, target_wand)
             if (ratio > 1 and old > val) then
               -- clamp the ratio at 1 so mixing caps at 100%, but capture additive bonus in "flat"
               flat = (ratio - 1) * val
-              ratio = 1                
+              ratio = 1           
+              val = old -- don't replace the value, it's worse than the old one!     
             end            
           	if type(ratio) == "number" then
           	  val = ratio*val + (1-ratio)*old
