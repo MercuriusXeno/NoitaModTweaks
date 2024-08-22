@@ -113,14 +113,14 @@ function unlink_altar_wand(altar_id, wand_id)
     merge_wands(altar_id)
   else
     for i=1,#altars,1 do
-    local altar = altars[i]
-    local component_ids = EntityGetComponentIncludingDisabled(wand_id, "VariableStorageComponent", "wand_altar_statbuffer")
-    if component_ids ~= nil then
-      for j,component_id in pairs(component_ids) do
-        EntityRemoveComponent(wand_id, component_id)
+      local altar = altars[i]
+      local component_ids = EntityGetComponentIncludingDisabled(wand_id, "VariableStorageComponent", "wand_altar_statbuffer")
+      if component_ids ~= nil then
+        for j,component_id in pairs(component_ids) do
+          EntityRemoveComponent(wand_id, component_id)
+        end
       end
     end
-  end
     kill_wands(altar_id)
   end
 end
@@ -259,11 +259,26 @@ function merge_wands(altar_id, target_wand)
           ComponentSetValue2(var_component_id, altar.var_field, old)
 
           local val = ComponentGetValue2(src_component_id, altar.property)
+          local flat = 0
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
+            -- if ratio is > 100% and the target has better stats than the sacrifice
+            if (ratio > 1 and old > val) then
+              -- clamp the ratio at 1 for the next step, but capture an additive bonus
+              flat = (ratio - 1) * val
+              ratio = 1
+              val = old -- don't replace the value, it's worse than the old one!
+              if (val < 1) then
+                print("wtf is it doing making a malus")
+              end
+              print("Wand worse than current, lol")
+            end
           	if type(ratio) == "number" then
           	  val = ratio*val + (1-ratio)*old
           	end
+            if type(flat) == "number" and flat > 0 then
+              val = val + flat
+            end
           end
           ComponentSetValue2(trg_component_id, altar.property, val)
         else
@@ -271,21 +286,23 @@ function merge_wands(altar_id, target_wand)
           ComponentSetValue2(var_component_id, altar.var_field, old)
           
           local val = ComponentObjectGetValue2(src_component_id, altar.object, altar.property)
-          -- edit 1: we need a var to store the flat bonus we're adding
           local flat = 0
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
-            -- edit 2: if ratio is > 100% and the target has better stats than the sacrifice
+            -- if ratio is > 100% and the target has better stats than the sacrifice
             if (ratio > 1 and old > val) then
-              -- clamp the ratio at 1 so mixing caps at 100%, but capture additive bonus in "flat"
+              -- clamp the ratio at 1 for the next step, but capture an additive bonus
               flat = (ratio - 1) * val
-              ratio = 1           
-              val = old -- don't replace the value, it's worse than the old one!     
-            end            
+              ratio = 1
+              val = old -- don't replace the value, it's worse than the old one!
+              if (val < 1) then
+                print("wtf is it doing making a malus")
+              end
+              print("Wand worse than current, lol")
+            end
           	if type(ratio) == "number" then
           	  val = ratio*val + (1-ratio)*old
           	end
-            -- edit 3: if flat is nonzero number add it to the result
             if type(flat) == "number" and flat > 0 then
               val = val + flat
             end
