@@ -267,23 +267,30 @@ function merge_wands(altar_id, target_wand)
           local flat = 0
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
-            -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val)) then
-              -- clamp the ratio at 1 for the next step, but capture an additive bonus
-              flat = (ratio - 1) * val
-              val = old -- don't replace the value, it's worse than the old one!
-            end
-            if ratio > 1 then
-              ratio = 1
-            end
           	if type(ratio) == "number" then
+              -- make it not an ugly number...
+              if ratio ~= math.floor(ratio * 100 + 0.5) / 100 then
+                ratio = math.floor(ratio * 100 + 0.5) / 100
+              end
+              -- if ratio is > 100% and the target has better stats than the sacrifice
+              if ratio > 1 then
+                if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
+                  -- clamp the ratio at 1 for the next step, but capture an additive bonus
+                  flat = (ratio - 1) * val
+                  GamePrint(val)
+                  GamePrint((ratio - 1))
+                  GamePrint(flat)
+                  val = old -- don't replace the value, it's worse than the old one!
+                end
+                ratio = 1
+              end
           	  val = ratio * val + (1 - ratio) * old
-          	end
-            if type(flat) == "number" and math.abs(flat) > 0 then
-              if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
-                val = val + flat
-              elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
-                val = val - flat
+              if math.abs(flat) > 0 then
+                if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
+                  val = val + flat
+                elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
+                  val = val - flat
+                end
               end
             end
           end
@@ -296,23 +303,30 @@ function merge_wands(altar_id, target_wand)
           local flat = 0
           if type(val) == "number" and type(old) == "number" then
             local ratio = ModSettingGet("wand_workshop.mix_fraction")
-            -- if ratio is > 100% and the target has better stats than the sacrifice
-            if ratio > 1 and ((altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val)) then
-              -- clamp the ratio at 1 for the next step, but capture an additive bonus
-              flat = (ratio - 1) * val
-              val = old -- don't replace the value, it's worse than the old one!
-            end
-            if ratio > 1 then
-              ratio = 1
-            end
           	if type(ratio) == "number" then
+              -- make it not an ugly number...
+              if ratio ~= math.floor(ratio * 100 + 0.5) / 100 then
+                ratio = math.floor(ratio * 100 + 0.5) / 100
+              end
+              -- if ratio is > 100% and the target has better stats than the sacrifice
+              if ratio > 1 then
+                if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
+                  -- clamp the ratio at 1 for the next step, but capture an additive bonus
+                  flat = (ratio - 1) * val
+                  GamePrint(val)
+                  GamePrint((ratio - 1))
+                  GamePrint(flat)
+                  val = old -- don't replace the value, it's worse than the old one!
+                end
+                ratio = 1
+              end
           	  val = ratio * val + (1 - ratio) * old
-          	end
-            if type(flat) == "number" and math.abs(flat) > 0 then
-              if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
-                val = val + flat
-              elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
-                val = val - flat
+              if math.abs(flat) > 0 then
+                if (altar.operator == "additive" and flat > 0) or (altar.operator == "reductive" and flat < 0) then
+                  val = val + flat
+                elseif (altar.operator == "additive" and flat < 0) or (altar.operator == "reductive" and flat > 0) then
+                  val = val - flat
+                end
               end
             end
           end
