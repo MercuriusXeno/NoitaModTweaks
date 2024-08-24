@@ -1,3 +1,4 @@
+-- basic wand workshop 2.0 wand growth edit
 dofile_once("mods/wand_workshop/files/scripts/lib/ComponentUtils.lua")
 dofile_once("mods/wand_workshop/files/scripts/config.lua")
 dofile_once("data/scripts/lib/utilities.lua")
