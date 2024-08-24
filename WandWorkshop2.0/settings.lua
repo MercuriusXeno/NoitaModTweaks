@@ -38,14 +38,12 @@ mod_settings =
 	{
 		id = "mix_fraction",
 		ui_name = "Mix Ratio",
-    -- edit here (original -> explain how mix ratios over 100% work)
-		ui_description = "How much the stats of the edited wand should be affected by the sacrificed wands.\nOver 100%, if the wand is already better than the sacrificed wand, the remaining % of the sacrificed wand's stat is added to the target wand.\n0%: The mod doesn't work.\n50%: the stat becomes the average of both.\n100%: the stat is completely replaced by the new wand.\n101%: if the sacrificed wand stat is lower than the edited wand, add 1% of that stat to the wand.\n110%: 10% of the stat is additive, you must like the fungal caves.\n200%: Look, are you sure you want this? The stat is added to the target with no reduction.",
+		ui_description = "How much the stats of the edited wand should be affected by the sacrificed wands.\nOver 100%, if the wand is already better than the sacrificed wand, the remaining % of the sacrificed wand's stat is added to the target wand.\n0%: The mod doesn't work.\n50%: the stat becomes the average of both.\n100%: the stat is completely replaced by the new wand.\n101%: if the sacrifice is worse than the target, add 1% of the stat to it instead of replacing it.\n110%: 10% stat growth if already better, recommended.\n150%: 50% stat growth, this is really strong.",
 		value_default = 1,
 		value_min = 0,
-    -- and here (1 -> 2)
-		value_max = 2,
+		value_max = 1.5,
 		value_display_multiplier = 100,
-		value_display_formatting = " $0 %",
+		value_display_formatting = " $0.00 %",
 		scope = MOD_SETTING_SCOPE_NEW_GAME,
 		change_fn = mod_setting_change_callback, -- Called when the user interact with the settings widget.
 	}
