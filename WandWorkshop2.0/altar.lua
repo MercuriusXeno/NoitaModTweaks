@@ -274,7 +274,7 @@ function merge_wands(altar_id, target_wand)
               end
               -- if ratio is > 100% and the target has better stats than the sacrifice
               if ratio > 1 then
-                if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
+                if (altar.operator == "additive" and old >= val) or (altar.operator == "reductive" and old <= val) then
                   -- clamp the ratio at 1 for the next step, but capture an additive bonus
                   flat = (ratio - 1) * val
                   val = old -- don't replace the value, it's worse than the old one!
@@ -307,7 +307,7 @@ function merge_wands(altar_id, target_wand)
               end
               -- if ratio is > 100% and the target has better stats than the sacrifice
               if ratio > 1 then
-                if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
+                if (altar.operator == "additive" and old >= val) or (altar.operator == "reductive" and old <= val) then
                   -- clamp the ratio at 1 for the next step, but capture an additive bonus
                   flat = (ratio - 1) * val
                   val = old -- don't replace the value, it's worse than the old one!
