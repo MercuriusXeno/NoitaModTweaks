@@ -72,7 +72,7 @@ local altars = {
     property = "shuffle_deck_when_empty",
     var_field = "value_bool",
     material = "spark_green",
-    operator = "reductive"
+    operator = nil
   },
   {
     tag = "Simulcast_Altar",
@@ -80,7 +80,7 @@ local altars = {
     property = "actions_per_round",
     var_field = "value_int",
     material = "spark_player",
-    operator = "additive"
+    operator = nil
   },
   {
     tag = "Spread_Altar",
@@ -277,9 +277,6 @@ function merge_wands(altar_id, target_wand)
                 if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
                   -- clamp the ratio at 1 for the next step, but capture an additive bonus
                   flat = (ratio - 1) * val
-                  GamePrint(val)
-                  GamePrint((ratio - 1))
-                  GamePrint(flat)
                   val = old -- don't replace the value, it's worse than the old one!
                 end
                 ratio = 1
@@ -313,9 +310,6 @@ function merge_wands(altar_id, target_wand)
                 if (altar.operator == "additive" and old > val) or (altar.operator == "reductive" and old < val) then
                   -- clamp the ratio at 1 for the next step, but capture an additive bonus
                   flat = (ratio - 1) * val
-                  GamePrint(val)
-                  GamePrint((ratio - 1))
-                  GamePrint(flat)
                   val = old -- don't replace the value, it's worse than the old one!
                 end
                 ratio = 1
