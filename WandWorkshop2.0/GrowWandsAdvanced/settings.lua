@@ -38,24 +38,40 @@ mod_settings =
 	{
 		id = "mix_fraction",
 		ui_name = "Mix Ratio",
-		ui_description = "How much the stats of the edited wand should be affected by the sacrificed wands.\nOver 100%, if the wand is already better than the sacrificed wand, the remaining % of the sacrificed wand's stat is added to the target wand. The new pillar, Omni, is only half as strong but in exchange, improves all growth stats at once.\n0%: Stat pillars stop working. Why you would do this, who knows.\n50%: the stat becomes the average of both.\n100%: the stat is completely replaced by the new wand.\n120%: Steal 20% of the wand's stats if the target wand is already better. Omni absorbs 10% by default.\n150%: 50% stat growth, this is really strong. Omni absorbs 25% by default.\n200%: Completely absorb the wand stat. Omni absorbs 50% of growable stats.\nUsing Omni Pillar Strength setting lets you change the omni ratio to whatever you want, if half doesn't work for you.",
-		value_default = 1,
+		ui_description = 
+            "The percentage of stats the sacrificed wand should give the target." ..
+            "\nIf target > sacrificed wand, (ratio - 100)% is added instead" ..             
+            "\nOmni pillar (rune omega) receives half of this %" ..
+            "\nbut improves all 6 growth stats (shuffle/simulcast ignored!)." ..
+            "\n0%: Single-stat pillars do nothing. The old stat is always kept." ..
+            "\n50%: The stat becomes the average of both. Absorb OFF." ..
+            "\n100%: If target < sacrifice, swap stats. Absorb OFF." ..
+            "\n150%: If sacrifice < target, absorb 50% (Omni 25%)." ..
+            "\n200%: If sacrifice < target, absorb 100% (Omni 50%)." ..
+            "\nRecommended is ~110 to ~120, but you do you.",
+		value_default = 1.1,
 		value_min = 0,
 		value_max = 2,
 		value_display_multiplier = 100,
-		value_display_formatting = " $0.00 %",
+		value_display_formatting = " $0 %",
 		scope = MOD_SETTING_SCOPE_NEW_GAME,
 		change_fn = mod_setting_change_callback, -- Called when the user interact with the settings widget.
 	},
 	{
 		id = "omni_override",
-		ui_name = "Omni Pillar Strength",
-		ui_description = "By default, omni pillar absorbs half what you'd normally get from a pillar absorb. It works even if the wand on the center pillar is worse than the sacrificed wand in any category.\nYou can set this to something else if you want, and it will use that instead.\nDefault: 0%, Max: 100%\nIf you disable Mix Ratio growth, you can still use the Omni pillar if you set this above 0%.",
+		ui_name = "Omni Ratio",
+		ui_description = 
+            "Omni pillar (rune omega) absorbs (mix - 100), cut in half." ..            
+            "\nThis override specifies the ratio to absorb, up to 100%." ..
+            "\n0%: Ignored. Doesn't disable Omni; simply won't override." ..
+            "\n50%: Omni absorbs 50% (speed/reload/spread/mana/charge/slots)." ..
+            "\n100%: Omni absorbs 100% (!)(speed/reload/spread/mana/charge/slots)." ..
+            "\nOmni Ratio lets Omni work even when Mix is 100% or less.",
 		value_default = 0,
 		value_min = 0,
 		value_max = 1,
 		value_display_multiplier = 100,
-		value_display_formatting = " $0.00 %",
+		value_display_formatting = " $0 %",
 		scope = MOD_SETTING_SCOPE_NEW_GAME,
 		change_fn = mod_setting_change_callback, -- Called when the user interact with the settings widget.
 	}

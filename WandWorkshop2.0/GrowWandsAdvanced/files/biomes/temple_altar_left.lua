@@ -5,9 +5,11 @@ RegisterSpawnFunction( 0xff3a17a3 , "spawn_mana_altar")
 RegisterSpawnFunction( 0xff4a17a4 , "spawn_recharge_altar")
 RegisterSpawnFunction( 0xff5a17a5 , "spawn_shuffle_altar")
 RegisterSpawnFunction( 0xff6a17a6 , "spawn_simulcast_altar")
-RegisterSpawnFunction( 0xff6a17a7 , "spawn_spread_altar") -- idk if this could be ff7?
-RegisterSpawnFunction( 0xff6a17a8 , "spawn_capacity_altar") -- ff8?
-RegisterSpawnFunction( 0xff6a17a9 , "spawn_omni_altar") -- ff9?
+ -- tempting to fix these to pattern ff6 -> ff7 through 9 
+ -- but they're not broken in the png so i left it alone
+RegisterSpawnFunction( 0xff6a17a7 , "spawn_spread_altar")
+RegisterSpawnFunction( 0xff6a17a8 , "spawn_capacity_altar")
+RegisterSpawnFunction( 0xff6a17a9 , "spawn_omni_altar")
 
 function spawn_wand_altar(x, y)
   EntityLoad("mods/wand_workshop/files/entities/altar/main_altar.xml", x, y)

@@ -392,7 +392,7 @@ function get_growth_value(old, val, isOmni, altar_operator)
         if isOmni or hasImprovement then
             growth = ratio * val
         end
-        if isReductive and growth > 0
+        if isReductive and growth > 0 then
             growth = growth * -1 -- invert for reductive values
         end        
     end
