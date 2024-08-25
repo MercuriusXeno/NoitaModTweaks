@@ -1,34 +1,34 @@
+WandGrowth (Advanced) Add-on for WandWorkshop2.0 
+    (Absorb Stats + Omni Pillar)
+
 CHANGES
 =======
 Adds "wand growth" feature to the wand workshop (2.0):
-  If your wand is already better than the sacrificed wand on a given stat pillar, it absorbs a % of the stat instead of replacing it.
-  If your wand is worse than the wand on the pillar (even a little), it does what it originally does and replaces the stat.
-  If you use this and for whatever reason don't want the behavior, setting mix_ratio to 100 or less disables the feature.
+  If the sacrifice wand for a stat pillar wouldn't improve the target wand by swapping stats, it has a % of its stats stolen instead.
+  The % is based on the mix ratio. If you set it above 100%, anything above 100% is the stolen amount (so 110% => 100% swap + 10% theft if already better)
+  If you set the mix ratio to 100 or less, growth is disabled for the stat pillars.
 Adds "omni" pillar feature:
-  Omni only works if the mix_ratio is above 100%.
-  Omni will *only* absorb stats. Whatever your absorb ratio is (mix_ratio - 100), Omni takes half.
-  In exchange, Omni works on all absorbable stats simultaneously (that's 6 pillars at once).
+  Omni pillar works if the mix_ratio is above 100% or, alternatively, if you set the omni ratio to something other than 0%.
+  Omni will *only* absorb stats that can be grown. Whatever your absorb ratio is (mix_ratio - 100), Omni takes half.
+  In exchange, Omni works on all absorbable stats simultaneously (that's 6 pillars at once): speed, reload, mana, charge, slots and spread.
 
 INSTALLATION
 ============
-    Read this carefully.
-        I'm not responsible for your broken saves or botched changes.
-            1. Back up your wand_workshop (2.0)mod in case you break something. 
-            2. These changes can't do permanent damage to your game. If you get something wrong just redownload the mod.
-            3. Maybe backup your saves, I'm not a lua dev. I may break stuff. Use at your own risk.
-        
-    Where to find the files we're replacing:
-    
+    Read this carefully. I'm not responsible for your broken saves or botched changes.
+            1. Back up your saves, in case I break something.
+            2. Back up your wand_workshop (2.0) mod in case YOU break something. 
+
+To be clear: this is a mod of a mod (Wand Workshop 2.0). You're replacing some of the mod's files with these ones.
+    Where to find the files we're replacing:    
         1. Steam workshop users should find the mod in:
             [your-steam-library-folder]\steamapps\workshop\content\881100\3302329900\
-            (881100 is Noita, 3302329900 is WandWorkshop2.0)
             
         2. If you installed WandWorkshop2.0 manually it should be in your Noita\mods folder in your steam library called something like:
-            [your-steam-library-folder]\steamapps\common\Noita\mods\wand_workshop\
-            (if yours is named something else, that's fine, I don't need to know. Use common sense.)
+            [your-steam-library-folder]\steamapps\common\Noita\mods\wand_workshop\            
     
     How to replace the files:
         Move the files from the folder containing this readme directly into the wand_workshop mod folder (not the mods folder).
+        
     
     There should be a handful of files overwritten ( ".." being the wand workshop mod folder)
         ..\settings.lua
@@ -41,6 +41,4 @@ INSTALLATION
         ..\files\entities\altar\sacrificial_altars\omni_altar.png
         ..\files\entities\altar\sacrificial_altars\omni_altar.xml  
 
-If it doesn't ask you to overwrite settings.lua and altar.lua, etc, you've done something wrong.
-Restore your backup and try again, except instead of what you did, consider following the instructions.
-That's all. 
+If it doesn't ask you to overwrite files, you've done something wrong.
