@@ -24,6 +24,7 @@ function get_wand_ability_component(wand_id)
 end
 
 local main_altar_tag = "Wand_Altar"
+local wand_stat_buffer_tag = "wand_altar_statbuffer"
 local altars = {
     {
         tag = "Speed_Altar",
@@ -149,31 +150,33 @@ function link_altar_wand(altar_id, wand_id)
     EntityAddChild(wand_id, altar_id)
     EntitySetComponentsWithTagEnabled(altar_id, "wand_pickup", false)
     EntitySetComponentsWithTagEnabled(altar_id, "wand_effect", true)
-    if not EntityHasTag(altar_id, "Wand_Altar") then
+    if not EntityHasTag(altar_id, main_altar_tag) then
+        --print("linking wand " .. wand_id .. " to sacrifice pillar " .. altar_id)
         reset_wands(altar_id)
         merge_wands(altar_id)
     else
+        --print("linking target wand " .. wand_id .. " to central pillar " .. altar_id)
         merge_wands(altar_id, wand_id)
     end
 end
 
+-- fired when a wand is picked up from the pillar
 function unlink_altar_wand(altar_id, wand_id)
     EntityRemoveFromParent(altar_id)
     EntitySetComponentsWithTagEnabled(altar_id, "wand_pickup", true)
     EntitySetComponentsWithTagEnabled(altar_id, "wand_effect", false)
-    if not EntityHasTag(altar_id, "Wand_Altar") then
+    if not EntityHasTag(altar_id, main_altar_tag) then
+        --print("removing wand " .. wand_id .. " from pillar " .. altar_id)
         reset_wands(altar_id)
         merge_wands(altar_id)
     else
-        for i = 1, #altars do
-            local component_ids = EntityGetComponentIncludingDisabled(wand_id, "VariableStorageComponent", "wand_altar_statbuffer")
-            if component_ids ~= nil then
-                for j, component_id in pairs(component_ids) do
-                    EntityRemoveComponent(wand_id, component_id)
-                end
+        --print("taking target wand " .. wand_id .. " from central pillar " .. altar_id)
+        local component_ids = EntityGetComponentIncludingDisabled(wand_id, "VariableStorageComponent", wand_stat_buffer_tag)
+        if component_ids ~= nil then
+            for j, component_id in pairs(component_ids) do
+                EntityRemoveComponent(wand_id, component_id)
             end
         end
-
         kill_wands(altar_id)
     end
 end
@@ -229,7 +232,7 @@ function kill_wand(wand_id, altar_id, material)
             end
         end
     end
-
+    --print("destroying wand id " .. wand_id .. " at altar " .. altar_id)
     EntityConvertToMaterial(wand_id, "gold")
     EntityKill(wand_id)
 end
@@ -244,48 +247,52 @@ function kill_wands(altar_id)
     end
 end
 
+-- called when unlinking wands from any pillar
 function reset_wands(altar_id)
-    if not EntityHasTag(altar_id, "Wand_Altar") then
+    if not EntityHasTag(altar_id, main_altar_tag) then
         local pos_x, pos_y = EntityGetTransform(altar_id)
-        altar_id = EntityGetClosestWithTag(pos_x, pos_y, "Wand_Altar")
+        altar_id = EntityGetClosestWithTag(pos_x, pos_y, main_altar_tag)
     end
-
+    -- always the central (target) wand as a result of the above calibration
     local wand_id = get_wand(altar_id)
+    -- abort if there's no wand on the central pillar
     if wand_id == nil then return end
     local ability_component_id = get_wand_ability_component(wand_id)
     if ability_component_id == nil then return end
     for j = 1, #altars do
         local altar = altars[j]
-        local component_id = EntityGetFirstComponentWithVariable(wand_id, "VariableStorageComponent", "name", altar.property, "wand_altar_statbuffer")
-        if component_id ~= nil then
-            if altar.object == nil then
-                ComponentSetValue2(ability_component_id, altar.property, ComponentGetValue2(component_id, altar.var_field))
-            else
-                ComponentObjectSetValue2(ability_component_id, altar.object, altar.property, ComponentGetValue2(component_id, altar.var_field))
-            end
+        -- the reason we skip omni here is that the other pillars already
+        -- cover every property, so we can skip "resetting" omni, it's redundant.
+        if altar.omni == nil then
+            local component_id = EntityGetFirstComponentWithVariable(wand_id, "VariableStorageComponent", "name", altar.property, wand_stat_buffer_tag)
+            if component_id ~= nil then
+                if altar.object == nil then
+                    ComponentSetValue2(ability_component_id, altar.property, ComponentGetValue2(component_id, altar.var_field))
+                else
+                    ComponentObjectSetValue2(ability_component_id, altar.object, altar.property, ComponentGetValue2(component_id, altar.var_field))
+                end
 
-            EntityRemoveComponent(wand_id, component_id)
+                EntityRemoveComponent(wand_id, component_id)
+            end
         end
     end
 end
 
+-- called when resetting the wands due to link or unlink
 function merge_wands(altar_id, target_wand)
-    if not EntityHasTag(altar_id, "Wand_Altar") then
+    if not EntityHasTag(altar_id, main_altar_tag) then
         local pos_x, pos_y = EntityGetTransform(altar_id)
         altar_id = EntityGetClosestWithTag(pos_x, pos_y, main_altar_tag)
     end
-
     if target_wand == nil or target_wand == 0 then
         target_wand = get_wand(altar_id)
         if target_wand == 0 then return end
     end
-
     local trg_component_id = get_wand_ability_component(target_wand)
     if trg_component_id == nil then
         print("Error, bad wand on Main_Altar")
         return
     end
-
     local pos_x, pos_y = EntityGetTransform(altar_id)
     for i = 1, #altars do
         local altar = altars[i]
@@ -294,107 +301,142 @@ function merge_wands(altar_id, target_wand)
         if wand_id ~= 0 then
             local src_component_id = get_wand_ability_component(wand_id)
             if src_component_id ~= nil then
-                combine_wand_stats(altar, target_wand)
-            else --kill_wand(wand_id, sub_altar_id, altar.material)
+                combine_wand_stats(trg_component_id, src_component_id, altar, target_wand)
+            else
                 print("Error, bad wand on " .. altar.tag .. "; skipping")
             end
         end
     end
 end
 
-function combine_wand_stats(altar, target_wand)
+function combine_wand_stats(trg_component_id, src_component_id, altar, target_wand)
     if altar.omni == nil then
-        ensure_stat_buffer_exists(target_wand, altar.property)
-        set_component_stats(trg_component_id, var_component_id, altar, false)
+        local var_component_id = ensure_stat_buffer_exists_and_return_component(target_wand, altar.property)
+        set_component_stats(trg_component_id, src_component_id, var_component_id, altar, false)
     else
         local omnis = altar.omni
-        for o = 1, #omnis do
+        for o = 1, #omnis do            
             local omni = omnis[o]
-            ensure_stat_buffer_exists(target_wand, omni.property)
-            set_component_stats(trg_component_id, var_component_id, omni, true)   
+            local var_component_id = ensure_stat_buffer_exists_and_return_component(target_wand, omni.property)
+            -- omni doesn't set the stat buffer because that would set it twice, there's no need to do that.            
+            set_component_stats(trg_component_id, src_component_id, var_component_id, omni, true)
         end
     end
 end
 
-function ensure_stat_buffer_exists(target_wand, property)
-    local var_component_id = EntityGetFirstComponentWithVariable(target_wand, "VariableStorageComponent", "name", property, "wand_altar_statbuffer")
+function ensure_stat_buffer_exists_and_return_component(target_wand, property)
+    local var_component_id = EntityGetFirstComponentWithVariable(target_wand, "VariableStorageComponent", "name", property, wand_stat_buffer_tag)
     if var_component_id == nil then
-        var_component_id = EntityAddComponent(target_wand, "VariableStorageComponent", {
-            name = property,
-            _tags = "wand_altar_statbuffer"
-        })
+        var_component_id = EntityAddComponent(target_wand, "VariableStorageComponent", { name = property, _tags = wand_stat_buffer_tag })
     end
+    return var_component_id
 end
 
-function set_component_stats(trg_component_id, var_component_id, altar, isOmni)
-    if altar_object == nil then
-        local old = ComponentGetValue2(trg_component_id, altar.property)
-        ComponentSetValue2(var_component_id, altar.var_field, old)
+function set_component_stats(trg_component_id, src_component_id, var_component_id, altar, isOmni)
+    --print("altar stat " .. altar.property .. (isOmni and " (omni)" or ""))
+    if altar.object == nil then
+        local val = ComponentGetValue2(trg_component_id, altar.property)
+        ensure_buffer_has_original_value(last, var_component_id, altar)
         local val = ComponentGetValue2(src_component_id, altar.property)
-        if type(val) == "number" and type(old) == "number" then
-            val = adjust_val_for_growth(old, val, isOmni, altar.operator)
+        if type(val) == "number" and type(last) == "number" then
+            val = adjust_val_for_growth(last, val, isOmni, altar)
         end
         ComponentSetValue2(trg_component_id, altar.property, val)
     else
-        local old = ComponentObjectGetValue2(trg_component_id, altar.object, altar.property)
-        ComponentSetValue2(var_component_id, altar.var_field, old)
+        local last = ComponentObjectGetValue2(trg_component_id, altar.object, altar.property)
+        ensure_buffer_has_original_value(last, var_component_id, altar)
         local val = ComponentObjectGetValue2(src_component_id, altar.object, altar.property)
-        if type(val) == "number" and type(old) == "number" then
-            val = adjust_val_for_growth(old, val, isOmni, altar.operator)
+        if type(val) == "number" and type(last) == "number" then
+            val = adjust_val_for_growth(last, val, isOmni, altar)
         end
         ComponentObjectSetValue2(trg_component_id, altar.object, altar.property, val)
     end
 end
 
-function adjust_val_for_growth(old, val, isOmni, altar_operator)
-    local baseVal = get_base_value(old, val, altar_operator)
-    local growthVal = get_growth_value(old, val, isOmni, altar_operator)
+-- needed when omni checks the var buffer and adds its target stat
+-- to the set, because passing over the same stats as the other pillars
+-- causes the omni to give bonuses without sacrifice when resetting wands
+function ensure_buffer_has_original_value(last, var_component_id, altar)
+    if ComponentGetValue2(var_component_id, altar.var_field) == nil then
+        ComponentSetValue2(var_component_id, altar.var_field, last)
+    end 
+end
+
+function adjust_val_for_growth(last, val, isOmni, altar)
+    local baseVal = get_base_value(last, val, isOmni, altar)
+    -- print("base val " .. baseVal)
+    local growthVal = get_growth_value(last, val, isOmni, altar)
+    -- print("growth " .. growthVal)
     return baseVal + growthVal
 end
 
-function get_base_value(old, val, isOmni, altar_operator)
+-- gets the "original" value at the moment of the calculation
+-- for omni this includes incremental boosts from the other pedestals
+-- have to be added first, so "last" is more accurate than "original"
+function get_base_value(last, val, isOmni, altar)
     local ratio = ModSettingGet("wand_workshop.mix_fraction")
-    if type(ratio) == "number" then
-        local isAdditive = altar_operator == "additive"
-        local isReductive = altar_operator == "reductive"
+    if type(ratio) == "number" and not isOmni then
+        local isAdditive = altar.operator == "additive"
+        local isReductive = altar.operator == "reductive"
+        local isImproved = (isAdditive and last >= val) or (isReductive and last <= val)
         ratio = clean_precision(ratio)
         if ratio > 1 then -- if ratio is > 100% and the target has better stats than the sacrifice
-            if (isAdditive and old >= val) or (isReductive and old <= val) then
-                val = old -- don't replace the value, it's worse than the old one!
+            if isImproved then
+                val = last -- don't replace the value, it's worse than the old one!
             end
             ratio = 1
         end
-        if isOmni then
-            val = old
-        else
-            val = ratio * val + (1 - ratio) * old
-        end
+        -- most pillars apply their mix ratio
+        val = ratio * val + (1 - ratio) * last
+        -- clean up partials so we are integral and clean
+        if isAdditive and val ~= 0 then
+            val = math.ceil(val)
+        elseif isReductive and val ~= 0 then
+            val = math.floor(val)
+        end            
+    else
+        val = last -- omni leaves the stats wherever they are. no "swapping"
     end
-    return val -- maybe modified, maybe not
+    
+    return val
 end
 
-function get_growth_value(old, val, isOmni, altar_operator)
+-- needed to determine how much growth comes from
+-- a given pillar or the omni pillar, potentially
+function get_growth_value(last, val, isOmni, altar)
     local override = ModSettingGet("wand_workshop.omni_override")
     local ratio = ModSettingGet("wand_workshop.mix_fraction")
     if type(override) == "number" and override > 0 then
         ratio = clean_precision(override)
+        --print("overridden growth ratio " .. ratio)
     elseif type(ratio) == "number" and ratio > 1 then
         ratio = clean_precision((ratio - 1) / 2)
+        --print("default growth ratio " .. ratio)
     else
         ratio = 0
     end
     local growth = 0  
     if ratio > 0 then       
-        local isAdditive = altar_operator == "additive"
-        local isReductive = altar_operator == "reductive"    
-        local hasImprovement = ((isAdditive and old >= val) or (isReductive and old <= val))
+        local isAdditive = altar.operator == "additive"
+        local isReductive = altar.operator == "reductive"    
+        local hasImprovement = ((isAdditive and last >= val) or (isReductive and last <= val))
         -- other pillars replace the stat unless the wand is better
         if isOmni or hasImprovement then
             growth = ratio * val
         end
-        if isReductive and growth > 0 then
-            growth = growth * -1 -- invert for reductive values
+        -- ensure that growth happens. when reductive values go negative
+        -- we don't want them to make a malus. just make their value absolute.
+        if (isReductive and growth > 0) or (isAdditive and growth < 0) then
+            growth = growth * -1
         end        
+    end
+    -- make sure values are integral numbers. under the hood, speed is in frames, not fractional.
+    if growth ~= 0 then
+        if growth > 0 then
+            growth = math.ceil(growth)
+        else
+            growth = math.floor(growth)
+        end
     end
     return growth
 end
