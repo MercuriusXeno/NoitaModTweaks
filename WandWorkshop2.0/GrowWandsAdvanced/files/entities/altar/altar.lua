@@ -313,13 +313,13 @@ end
 
 function combine_wand_stats(trg_component_id, src_component_id, altar, target_wand)
     if altar.omni == nil then
-        local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, altar.property)
+        local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, altar)
         set_component_stats(trg_component_id, src_component_id, var_component_id, altar, false)
     else
         local omnis = altar.omni
         for o = 1, #omnis do            
             local omni = omnis[o]
-            local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, omni.property)
+            local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, omni)
             -- omni doesn't set the stat buffer because that would set it twice, there's no need to do that.            
             set_component_stats(trg_component_id, src_component_id, var_component_id, omni, true)
         end
