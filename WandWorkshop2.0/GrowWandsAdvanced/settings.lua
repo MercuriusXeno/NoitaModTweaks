@@ -48,7 +48,7 @@ mod_settings =
             "\n100%: If target < sacrifice, swap stats. Absorb OFF." ..
             "\n150%: If sacrifice < target, absorb 50% (Omni 25%)." ..
             "\n200%: If sacrifice < target, absorb 100% (Omni 50%)." ..
-            "\nRecommended is ~110 to ~120, but you do you.",
+            "\nRecommended is 110 or 120, or go wild, who cares.",
 		value_default = 1.1,
 		value_min = 0,
 		value_max = 2,
@@ -62,11 +62,12 @@ mod_settings =
 		ui_name = "Omni Ratio",
 		ui_description = 
             "Omni pillar (rune omega) absorbs (mix - 100), cut in half." ..            
-            "\nThis override specifies the ratio to absorb, up to 100%." ..
-            "\n0%: Ignored. Doesn't disable Omni; simply won't override." ..
+            "\nIf desired, this setting overrides that, up to 100%." ..
+            "\n0%: Use the default (doesn't disable omni pillar)." ..
             "\n50%: Omni absorbs 50% (speed/reload/spread/mana/charge/slots)." ..
-            "\n100%: Omni absorbs 100% (!)(speed/reload/spread/mana/charge/slots)." ..
-            "\nOmni Ratio lets Omni work even when Mix is 100% or less.",
+            "\n100%: Omni absorbs 100% (speed/reload/spread/mana/charge/slots)." ..
+            "\nIf Mix Ratio is at or below 100, you can still" ..
+            "\ngrow wands using the Omni pillar, if you set this > 0%.",
 		value_default = 0,
 		value_min = 0,
 		value_max = 1,
