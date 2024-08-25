@@ -266,10 +266,12 @@ function reset_wands(altar_id)
         if altar.omni == nil then
             local component_id = EntityGetFirstComponentWithVariable(wand_id, "VariableStorageComponent", "name", altar.property, wand_stat_buffer_tag)
             if component_id ~= nil then
+                local value = ComponentGetValue2(component_id, altar.var_field)
+                print("reset wand " .. altar.property .. " to buffer value " .. value)
                 if altar.object == nil then
-                    ComponentSetValue2(ability_component_id, altar.property, ComponentGetValue2(component_id, altar.var_field))
+                    ComponentSetValue2(ability_component_id, altar.property, value)
                 else
-                    ComponentObjectSetValue2(ability_component_id, altar.object, altar.property, ComponentGetValue2(component_id, altar.var_field))
+                    ComponentObjectSetValue2(ability_component_id, altar.object, altar.property, value)
                 end
 
                 EntityRemoveComponent(wand_id, component_id)
@@ -311,99 +313,94 @@ end
 
 function combine_wand_stats(trg_component_id, src_component_id, altar, target_wand)
     if altar.omni == nil then
-        local var_component_id = ensure_stat_buffer_exists_and_return_component(target_wand, altar.property)
+        local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, altar.property)
         set_component_stats(trg_component_id, src_component_id, var_component_id, altar, false)
     else
         local omnis = altar.omni
         for o = 1, #omnis do            
             local omni = omnis[o]
-            local var_component_id = ensure_stat_buffer_exists_and_return_component(target_wand, omni.property)
+            local var_component_id = ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, omni.property)
             -- omni doesn't set the stat buffer because that would set it twice, there's no need to do that.            
             set_component_stats(trg_component_id, src_component_id, var_component_id, omni, true)
         end
     end
 end
 
-function ensure_stat_buffer_exists_and_return_component(target_wand, property)
-    local var_component_id = EntityGetFirstComponentWithVariable(target_wand, "VariableStorageComponent", "name", property, wand_stat_buffer_tag)
+-- importantly this sets the buffer value only once, if it doesn't exist.
+-- repeat access to the buffer with this property name will not overwrite it
+function ensure_stat_buffer_exists_and_return_component(trg_component_id, target_wand, altar)
+    local var_component_id = EntityGetFirstComponentWithVariable(target_wand, "VariableStorageComponent", "name", altar.property, wand_stat_buffer_tag)
     if var_component_id == nil then
-        var_component_id = EntityAddComponent(target_wand, "VariableStorageComponent", { name = property, _tags = wand_stat_buffer_tag })
+        var_component_id = EntityAddComponent(target_wand, "VariableStorageComponent", { name = altar.property, _tags = wand_stat_buffer_tag })
+        ComponentSetValue2(var_component_id, altar.var_field, get_altar_property_of_component(trg_component_id, altar))
     end
     return var_component_id
 end
 
-function set_component_stats(trg_component_id, src_component_id, var_component_id, altar, isOmni)
-    --print("altar stat " .. altar.property .. (isOmni and " (omni)" or ""))
-    if altar.object == nil then
-        local last = ComponentGetValue2(trg_component_id, altar.property)
-        ensure_buffer_has_original_value(last, var_component_id, altar)
-        local val = ComponentGetValue2(src_component_id, altar.property)
-        if type(val) == "number" and type(last) == "number" then
-            val = adjust_val_for_growth(last, val, isOmni, altar)
-        end
-        ComponentSetValue2(trg_component_id, altar.property, val)
+function get_altar_property_of_component(component_id, altar)
+    local value = nil
+    print("getting altar property of component " .. component_id .. " for altar property " .. altar.property)
+    if altar.object ~= nil then
+        value = ComponentObjectGetValue2(component_id, altar.object, altar.property)
     else
-        local last = ComponentObjectGetValue2(trg_component_id, altar.object, altar.property)
-        ensure_buffer_has_original_value(last, var_component_id, altar)
-        local val = ComponentObjectGetValue2(src_component_id, altar.object, altar.property)
-        if type(val) == "number" and type(last) == "number" then
-            val = adjust_val_for_growth(last, val, isOmni, altar)
-        end
-        ComponentObjectSetValue2(trg_component_id, altar.object, altar.property, val)
+        value = ComponentGetValue2(component_id, altar.property)
+    end
+    return value
+end
+
+function set_component_stats(trg_component_id, src_component_id, var_component_id, altar, isOmni)
+    local last = get_altar_property_of_component(trg_component_id, altar)
+    local value = get_altar_property_of_component(src_component_id, altar)
+    if type(value) == "number" and type(last) == "number" then
+        value = adjust_value_for_growth(last, value, isOmni, altar)
+    end
+    set_altar_property_of_component(trg_component_id, altar, value)
+end
+
+function set_altar_property_of_component(trg_component_id, altar, value)
+    if altar.object == nil then        
+        ComponentSetValue2(trg_component_id, altar.property, value)
+    else
+        ComponentObjectSetValue2(trg_component_id, altar.object, altar.property, value)
     end
 end
 
--- needed when omni checks the var buffer and adds its target stat
--- to the set, because passing over the same stats as the other pillars
--- causes the omni to give bonuses without sacrifice when resetting wands
-function ensure_buffer_has_original_value(last, var_component_id, altar)
-    if ComponentGetValue2(var_component_id, altar.var_field) == nil then
-        ComponentSetValue2(var_component_id, altar.var_field, last)
-    end 
-end
-
-function adjust_val_for_growth(last, val, isOmni, altar)
-    local baseVal = get_base_value(last, val, isOmni, altar)
-    -- print("base val " .. baseVal)
-    local growthVal = get_growth_value(last, val, isOmni, altar)
-    -- print("growth " .. growthVal)
-    return baseVal + growthVal
+function adjust_value_for_growth(last, value, isOmni, altar)
+    return get_base_value(last, value, isOmni, altar) + get_growth_value(last, value, isOmni, altar)
 end
 
 -- gets the "original" value at the moment of the calculation
--- for omni this includes incremental boosts from the other pedestals
--- have to be added first, so "last" is more accurate than "original"
-function get_base_value(last, val, isOmni, altar)
+function get_base_value(last, value, isOmni, altar)
     local ratio = ModSettingGet("wand_workshop.mix_fraction")
     if type(ratio) == "number" and not isOmni then
         local isAdditive = altar.operator == "additive"
         local isReductive = altar.operator == "reductive"
-        local isImproved = (isAdditive and last >= val) or (isReductive and last <= val)
+        local isImproved = (isAdditive and last >= value) or (isReductive and last <= value)
         ratio = clean_precision(ratio)
         if ratio > 1 then -- if ratio is > 100% and the target has better stats than the sacrifice
             if isImproved then
-                val = last -- don't replace the value, it's worse than the old one!
+                value = last -- don't replace the value, it's worse than the old one!
             end
             ratio = 1
         end
         -- most pillars apply their mix ratio
-        val = ratio * val + (1 - ratio) * last
+        value = ratio * value + (1 - ratio) * last
         -- clean up partials so we are integral and clean
-        if isAdditive and val ~= 0 then
-            val = math.ceil(val)
-        elseif isReductive and val ~= 0 then
-            val = math.floor(val)
+        if isAdditive and value ~= 0 then
+            value = math.ceil(value)
+        elseif isReductive and value ~= 0 then
+            value = math.floor(value)
         end            
     else
-        val = last -- omni leaves the stats wherever they are. no "swapping"
+        value = last -- omni leaves the stats wherever they are. no "swapping"
     end
     
-    return val
+    return value
 end
 
 -- needed to determine how much growth comes from
 -- a given pillar or the omni pillar, potentially
-function get_growth_value(last, val, isOmni, altar)
+function get_growth_value(last, value, isOmni, altar)
     local override = ModSettingGet("wand_workshop.omni_override")
     local ratio = ModSettingGet("wand_workshop.mix_fraction")
     if type(override) == "number" and override > 0 then
@@ -419,10 +416,10 @@ function get_growth_value(last, val, isOmni, altar)
     if ratio > 0 then       
         local isAdditive = altar.operator == "additive"
         local isReductive = altar.operator == "reductive"    
-        local hasImprovement = ((isAdditive and last >= val) or (isReductive and last <= val))
+        local hasImprovement = ((isAdditive and last >= value) or (isReductive and last <= value))
         -- other pillars replace the stat unless the wand is better
         if isOmni or hasImprovement then
-            growth = ratio * val
+            growth = ratio * value
         end
         -- ensure that growth happens. when reductive values go negative
         -- we don't want them to make a malus. just make their value absolute.
