@@ -10,21 +10,17 @@ Adds "wand growth" feature to the wand workshop (2.0):
 
 INSTALLATION
 ============
-    Read this carefully.
-        I'm not responsible for your broken saves or botched changes.
-            1. Back up your wand_workshop (2.0)mod in case you break something. 
-            2. These changes can't do permanent damage to your game. If you get something wrong just redownload the mod.
-            3. Maybe backup your saves, I'm not a lua dev. I may break stuff. Use at your own risk.
-        
-    Where to find the files we're replacing:
-    
+    Read this carefully. I'm not responsible for your broken saves or botched changes.
+        1. Back up your saves, in case I break stuff.
+        2. Back up your wand_workshop (2.0) mod in case YOU break something. 
+
+To be clear, this is a mod of a mod. We're replacing some of the files in the mod folder with these.
+    Where to find the files we're replacing:    
         1. Steam workshop users should find the mod in:
-            [your-steam-library-folder]\steamapps\workshop\content\881100\3302329900\
-            (881100 is Noita, 3302329900 is WandWorkshop2.0)
+            [your-steam-library-folder]\steamapps\workshop\content\881100\3302329900\            
             
         2. If you installed WandWorkshop2.0 manually it should be in your Noita\mods folder in your steam library called something like:
-            [your-steam-library-folder]\steamapps\common\Noita\mods\wand_workshop\
-            (if yours is named something else, that's fine, I don't need to know. Use common sense.)
+            [your-steam-library-folder]\steamapps\common\Noita\mods\wand_workshop\            
     
     How to replace the files:
         Move the files from the folder containing this readme directly into the wand_workshop mod folder (not the mods folder).
@@ -34,5 +30,3 @@ INSTALLATION
         ..\files\entities\altar\altar.lua
 
 If it doesn't ask you to overwrite settings.lua and altar.lua, you've done something wrong.
-Restore your backup and try again, except instead of what you did, consider following the instructions.
-That's all. 
