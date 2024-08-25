@@ -335,7 +335,7 @@ end
 function set_component_stats(trg_component_id, src_component_id, var_component_id, altar, isOmni)
     --print("altar stat " .. altar.property .. (isOmni and " (omni)" or ""))
     if altar.object == nil then
-        local val = ComponentGetValue2(trg_component_id, altar.property)
+        local last = ComponentGetValue2(trg_component_id, altar.property)
         ensure_buffer_has_original_value(last, var_component_id, altar)
         local val = ComponentGetValue2(src_component_id, altar.property)
         if type(val) == "number" and type(last) == "number" then
