@@ -14,7 +14,8 @@ INSTALLATION
     Read this carefully. I'm not responsible for your broken saves or botched changes.
             1. Back up your saves, in case I break something.
             2. Back up your wand_workshop (2.0) mod in case YOU break something. 
-        
+
+To be clear: this is a mod of a mod (Wand Workshop 2.0). You're replacing some of the mod's files with these ones.
     Where to find the files we're replacing:    
         1. Steam workshop users should find the mod in:
             [your-steam-library-folder]\steamapps\workshop\content\881100\3302329900\
@@ -24,6 +25,7 @@ INSTALLATION
     
     How to replace the files:
         Move the files from the folder containing this readme directly into the wand_workshop mod folder (not the mods folder).
+        
     
     There should be a handful of files overwritten ( ".." being the wand workshop mod folder)
         ..\settings.lua
