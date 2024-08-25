@@ -1,3 +1,6 @@
+WandGrowth (Advanced) Add-on for WandWorkshop2.0 
+    (Absorb Stats + Omni Pillar)
+
 CHANGES
 =======
 Adds "wand growth" feature to the wand workshop (2.0):
