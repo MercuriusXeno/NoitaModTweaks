@@ -1,0 +1,1 @@
+not sure this is going to work, but this is an attempt to add more gold accumulating entities to the technique employed by the mod, while reducing the vertical reach allowing you to pull gold from outside of your hitbox. Not sure if this technique is actually going to work, since I don't know how it works in the first place. Just a shot in the dark really.

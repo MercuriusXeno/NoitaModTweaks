@@ -366,7 +366,16 @@ function set_altar_property_of_component(trg_component_id, altar, value)
 end
 
 function adjust_value_for_growth(last, value, isOmni, altar)
-    return get_base_value(last, value, isOmni, altar) + get_growth_value(last, value, isOmni, altar)
+    local baseValue = get_base_value(last, value, isOmni, altar)
+    local growth = get_growth_value(last, value, isOmni, altar)
+    local improvedValue = baseValue + growth
+    if altar.tag == "Capacity_Altar" then
+        print("capacity altar base " + baseValue + " with growth " + growth)
+        local capacityLimit = ModSettingGet("wand_workshop.capacity_max")
+        improvedValue = math.max(baseValue, math.min(baseValue + growth, capacityLimit))
+        print("capacity limited to " + capacityLimit + " so improved value clamped to " + improvedValue)
+    end
+    return improvedValue
 end
 
 -- gets the "original" value at the moment of the calculation
@@ -435,6 +444,7 @@ function get_growth_value(last, value, isOmni, altar)
             growth = math.floor(growth)
         end
     end
+    print("growth at " + growth)
     return growth
 end
 

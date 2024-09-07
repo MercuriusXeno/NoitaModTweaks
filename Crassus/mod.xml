@@ -1,0 +1,6 @@
+<Mod
+	name="Crassus (Experimental)"
+	description="Increases the area in which you pick up gold powder, drastically decreasing the time spent snatching big piles of gold."
+	request_no_api_restrictions="0" 
+> 
+</Mod>

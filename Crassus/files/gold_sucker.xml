@@ -1,0 +1,320 @@
+<!-- This implementation is a jank one but I don't think you can do it better than this -->
+
+<Entity>
+    <InheritTransformComponent></InheritTransformComponent>
+    <LuaComponent execute_every_n_frame="1"
+        script_source_file="mods/leezo_goldsucker_mod/files/gold_sucker.lua">
+    </LuaComponent>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-1"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-2"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-3"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-4"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-5"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-6"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-7"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="-1" position.y="-8"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-1"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-2"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-3"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-4"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-5"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-6"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-7"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.x="1" position.y="-8"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-1"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-2"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-3"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-4"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-5"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-6"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-7"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+    <Entity tags="leezo_gold_sucker">
+        <InheritTransformComponent>
+            <Transform position.y="-8"></Transform>
+        </InheritTransformComponent>
+        <MaterialSuckerComponent suck_gold="1">
+        </MaterialSuckerComponent>
+        <AudioLoopComponent _tags="sound_pick_gold_sand" file="data/audio/Desktop/player.bank" 
+            event_name="player/pick_gold_sand" volume_autofade_speed="0.05">
+        </AudioLoopComponent>
+        <VariableStorageComponent name="accumulator_last_amount">
+        </VariableStorageComponent>
+    </Entity>
+</Entity>
